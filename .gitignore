@@ -1,0 +1,36 @@
+# Виртуальное окружение
+.venv/
+venv/
+env/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Сборка/дистрибутивы
+build/
+dist/
+*.egg-info/
+
+# Тесты и покрытие
+.pytest_cache/
+.coverage
+htmlcov/
+
+# PyCharm / JetBrains
+.idea/
+
+# Переменные окружения и секреты
+.env
+.env.local
+*.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Логи
+*.log
+
+# ОС
+Thumbs.db        # Windows
