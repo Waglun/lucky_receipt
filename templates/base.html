@@ -9,6 +9,45 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+<header class="header">
+    <div class="header-left">
+        <div class="logo" aria-hidden="true"></div>
+
+        <a href="{% url 'receipts:register_receipt' %}" class="back-link">
+            ← На сайт
+        </a>
+    </div>
+
+    <nav class="header-nav">
+        <a href="{% url 'receipts:cabinet' %}" class="nav-item">
+            Личный кабинет
+        </a>
+
+        <a href="#" class="nav-item">
+            Правила
+        </a>
+
+        <a href="#" class="nav-item">
+            Профиль
+        </a>
+    </nav>
+
+    <div class="header-right">
+        <div class="user-info">
+            <div class="user-avatar" aria-hidden="true"></div>
+
+            <div class="user-details">
+                <span class="user-name">
+                    {{ request.user.get_username }}
+                </span>
+
+                <span class="user-email">
+                    {{ request.user.email }}
+                </span>
+            </div>
+        </div>
+    </div>
+</header>
 
 {% block content %}
 {% endblock %}

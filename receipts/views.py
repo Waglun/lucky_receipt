@@ -39,17 +39,19 @@ def register_receipt(request):
 def cabinet(request):
     receipts = Receipt.objects.filter(
         user=request.user
-    ).order_by("-purchase_datetime")
+    ).order_by("-registered_at")
 
     paginator = Paginator(receipts, 10)
+
     page_number = request.GET.get("page")
+
     page_obj = paginator.get_page(page_number)
 
     return render(
         request,
         "receipts/cabinet.html",
         {
-            "page_obj": page_obj,
+            "receipts": page_obj,
         },
     )
 

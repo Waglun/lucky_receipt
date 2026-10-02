@@ -1,51 +1,247 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    История чеков
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/cabinet.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<h1>Личный кабинет</h1>
+<main class="main">
 
-<a href="{% url 'receipts:register_receipt' %}">
-    Зарегистрировать чек
-</a>
+    <div class="page-header">
+        <h1 class="page-title">История чеков</h1>
 
-{% if page_obj.object_list %}
+        <span class="badge">
+            Чеков внесено: {{ receipts.paginator.count }} шт.
+        </span>
+    </div>
 
-    {% for receipt in page_obj %}
-        <div>
-            <p>Дата покупки: {{ receipt.purchase_datetime }}</p>
-            <p>Сумма: {{ receipt.amount }} ₽</p>
-            <p>Статус: {{ receipt.get_status_display }}</p>
+    <div class="table-card">
 
-            {% if receipt.status == receipt.Status.REJECTED %}
-                <p>Причина отказа: {{ receipt.rejection_reason }}</p>
-            {% endif %}
+        <!-- Заголовок таблицы -->
+        <div class="table-header">
+            <span></span>
+            <span>Дата покупки</span>
+            <span>Статус</span>
+            <span>Сумма чека</span>
+            <span>Дата регистрации</span>
+            <span>Информация</span>
         </div>
-    {% endfor %}
 
-{% else %}
 
-    <p>У вас пока нет зарегистрированных чеков.</p>
+        {% for receipt in receipts %}
 
-{% endif %}
+            <div class="receipt-row" data-id="{{ receipt.id }}">
+
+                <!-- Пока вместо QR -->
+                <div class="qr-placeholder" title="Чек">
+                    №{{ receipt.id }}
+                </div>
+
+
+                <!-- Дата покупки -->
+                <div class="date-cell">
+                    {{ receipt.purchase_datetime|date:"d.m.Y H:i" }}
+                </div>
+
+
+                <!-- Статус -->
+                <div>
+
+                    {% if receipt.status == "pending" %}
+
+                        <span class="status status-processing">
+                            <span class="status-dot"></span>
+                            На проверке
+                        </span>
+
+                    {% elif receipt.status == "accepted" %}
+
+                        <span class="status status-success">
+                            <span class="status-dot"></span>
+                            Принят
+                        </span>
+
+                    {% elif receipt.status == "rejected" %}
+
+                        <span class="status status-error">
+                            <span class="status-dot"></span>
+                            Отклонен
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Сумма -->
+                <div class="amount-cell">
+                    <span class="amount-icon">₽</span>
+                    {{ receipt.amount }} ₽
+                </div>
+
+
+                <!-- Дата регистрации -->
+                <div class="date-cell">
+                    {{ receipt.registered_at|date:"d.m.Y H:i" }}
+                </div>
+
+
+                <!-- Информация -->
+                <div class="info-cell">
+
+                    {% if receipt.status == "pending" %}
+
+                        <span class="info-icon">ⓘ</span>
+                        <span>Чек находится на проверке</span>
+
+                    {% elif receipt.status == "accepted" %}
+
+                        <span class="info-icon">ⓘ</span>
+                        <span>Чек принят</span>
+
+                    {% elif receipt.status == "rejected" %}
+
+                        <span class="info-icon">ⓘ</span>
+
+                        <span>
+                            {{ receipt.rejection_reason|default:"Чек отклонен" }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-state">
+                У вас пока нет зарегистрированных чеков.
+            </div>
+
+        {% endfor %}
+
+
+        {% if receipts.has_other_pages %}
+
+            <div class="pagination">
+
+                {% if receipts.has_previous %}
+                    <a
+                        class="page-btn"
+                        href="?page={{ receipts.previous_page_number }}"
+                        aria-label="Предыдущая"
+                    >
+                        ‹
+                    </a>
+                {% else %}
+                    <button
+                        class="page-btn"
+                        disabled
+                        aria-label="Предыдущая"
+                    >
+                        ‹
+                    </button>
+                {% endif %}
+
+
+                {% for num in receipts.paginator.page_range %}
+
+                    {% if receipts.number == num %}
+
+                        <span class="page-btn active">
+                            {{ num }}
+                        </span>
+
+                    {% else %}
+
+                        <a
+                            class="page-btn"
+                            href="?page={{ num }}"
+                        >
+                            {{ num }}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if receipts.has_next %}
+                    <a
+                        class="page-btn"
+                        href="?page={{ receipts.next_page_number }}"
+                        aria-label="Следующая"
+                    >
+                        ›
+                    </a>
+                {% else %}
+                    <button
+                        class="page-btn"
+                        disabled
+                        aria-label="Следующая"
+                    >
+                        ›
+                    </button>
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Нижняя часть -->
+
+    <div class="footer-actions">
+
+        <div class="hint">
+            <span class="hint-icon">ⓘ</span>
+
+            Иногда проверка вашего чека может занять до 5 рабочих дней
+        </div>
+
+
+        <a
+            href="{% url 'receipts:register_receipt' %}"
+            class="btn-primary"
+        >
+            <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+            >
+                <rect
+                    x="3"
+                    y="2"
+                    width="10"
+                    height="12"
+                    rx="1.5"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                />
+
+                <path
+                    d="M6 5H10M6 8H10M6 11H8"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                />
+            </svg>
+
+            Зарегистрировать чек
+        </a>
+
+    </div>
+
+</main>
 
 {% endblock %}
-
-{% if page_obj.has_other_pages %}
-    <nav>
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">
-                Назад
-            </a>
-        {% endif %}
-
-        <span>
-            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                Далее
-            </a>
-        {% endif %}
-    </nav>
-{% endif %}
