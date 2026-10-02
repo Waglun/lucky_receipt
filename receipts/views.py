@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from .forms import ReceiptForm
 from .models import Receipt
+from django.http import JsonResponse
 
 
 @login_required
@@ -46,3 +47,27 @@ def cabinet(request):
             "page_obj": page_obj,
         },
     )
+
+
+@login_required
+def receipts_api(request):
+    receipts = Receipt.objects.filter(
+        user=request.user
+    ).order_by("-purchase_datetime")
+
+    data = []
+
+    for receipt in receipts:
+        data.append({
+            "id": receipt.id,
+            "fn": receipt.fn,
+            "fd": receipt.fd,
+            "fp": receipt.fp,
+            "purchase_datetime": receipt.purchase_datetime.isoformat(),
+            "amount": str(receipt.amount),
+            "status": receipt.status,
+            "rejection_reason": receipt.rejection_reason,
+            "registered_at": receipt.registered_at.isoformat(),
+        })
+
+    return JsonResponse(data, safe=False)
