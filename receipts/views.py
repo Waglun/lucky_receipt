@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.conf import settings
 
 from .forms import ReceiptForm
 from .models import Receipt
@@ -26,7 +27,11 @@ def register_receipt(request):
     return render(
         request,
         "receipts/register.html",
-        {"form": form},
+        {
+            "form": form,
+            "promo_start_date": settings.PROMO_START_DATE,
+            "promo_end_date": settings.PROMO_END_DATE,
+        },
     )
 
 

@@ -26,6 +26,48 @@ class ReceiptForm(forms.ModelForm):
             "purchase_datetime",
             "amount",
         ]
+        widgets = {
+            "fn": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "id": "fn",
+                    "placeholder": "Введите ФН",
+                    "autocomplete": "off",
+                }
+            ),
+            "fd": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "id": "check-number",
+                    "placeholder": "Введите номер чека (ФД)",
+                    "autocomplete": "off",
+                }
+            ),
+            "fp": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "id": "fp",
+                    "placeholder": "Введите ФП",
+                    "autocomplete": "off",
+                }
+            ),
+            "purchase_datetime": forms.DateTimeInput(
+                format="%Y-%m-%dT%H:%M",
+                attrs={
+                    "class": "form-input",
+                    "id": "purchase-date",
+                    "type": "datetime-local",
+                },
+            ),
+            "amount": forms.TextInput(
+                attrs={
+                    "class": "form-input",
+                    "id": "amount",
+                    "placeholder": "0.00 ₽",
+                    "autocomplete": "off",
+                }
+            ),
+        }
 
     def clean_fn(self):
         fn = self.cleaned_data["fn"]

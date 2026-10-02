@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
 
 {% block title %}
     Регистрация чека
@@ -6,46 +11,128 @@
 
 {% block content %}
 
-<h1>Регистрация чека</h1>
+<header class="header">
+    <div class="header-left">
+        <div class="logo" aria-hidden="true"></div>
 
-<form method="post">
-    {% csrf_token %}
-
-    {{ form.non_field_errors }}
-
-    <div>
-        {{ form.fn.label_tag }}
-        {{ form.fn }}
-        {{ form.fn.errors }}
+        <a href="{% url 'receipts:cabinet' %}" class="back-link">
+            ← В личный кабинет
+        </a>
     </div>
 
-    <div>
-        {{ form.fd.label_tag }}
-        {{ form.fd }}
-        {{ form.fd.errors }}
+    <nav class="header-nav">
+        <a href="{% url 'receipts:cabinet' %}" class="nav-item">
+            Личный кабинет
+        </a>
+
+        <a href="#" class="nav-item">
+            Правила
+        </a>
+
+        <a href="#" class="nav-item">
+            Профиль
+        </a>
+    </nav>
+
+    <div class="header-right">
+        <div class="user-info">
+            <div class="user-avatar" aria-hidden="true"></div>
+
+            <div class="user-details">
+                <span class="user-name">
+                    {{ request.user.get_username }}
+                </span>
+
+                <span class="user-email">
+                    {{ request.user.email }}
+                </span>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<main class="main">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <div class="modal-title-block">
+
+                <h1 class="modal-title">
+                    Регистрация чека
+                </h1>
+
+                <p class="modal-subtitle">
+                    Введите необходимые данные с чека
+                </p>
+
+                <p class="promo-period">
+                    Период акции:
+                    {{ promo_start_date|date:"d.m.Y" }}
+                    —
+                    {{ promo_end_date|date:"d.m.Y" }}
+                </p>
+
+            </div>
+        </div>
+
+
+        <form class="form" method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                <label class="form-label" for="fn">ФН</label>
+                {{ form.fn }}
+                {{ form.fn.errors }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="check-number">
+                    Номер чека
+                </label>
+                {{ form.fd }}
+                {{ form.fd.errors }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="fp">ФП</label>
+                {{ form.fp }}
+                {{ form.fp.errors }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="purchase-date">
+                    Дата покупки
+                </label>
+
+                <div class="form-input-date">
+                    {{ form.purchase_datetime }}
+
+
+                </div>
+
+                {{ form.purchase_datetime.errors }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="amount">
+                    Сумма
+                </label>
+
+                {{ form.amount }}
+                {{ form.amount.errors }}
+            </div>
+
+            <button type="submit" class="form-submit">
+                Загрузить
+            </button>
+        </form>
+
     </div>
 
-    <div>
-        {{ form.fp.label_tag }}
-        {{ form.fp }}
-        {{ form.fp.errors }}
-    </div>
-
-    <div>
-        {{ form.purchase_datetime.label_tag }}
-        {{ form.purchase_datetime }}
-        {{ form.purchase_datetime.errors }}
-    </div>
-
-    <div>
-        {{ form.amount.label_tag }}
-        {{ form.amount }}
-        {{ form.amount.errors }}
-    </div>
-
-    <button type="submit">
-        Зарегистрировать чек
-    </button>
-</form>
+</main>
 
 {% endblock %}
