@@ -119,13 +119,179 @@
 
             </div>
 
-        {% empty %}
+            {% empty %}
 
-            <div class="empty-state">
-                У вас пока нет зарегистрированных чеков.
-            </div>
+                <div class="empty-card">
 
-        {% endfor %}
+                    <div class="empty-illustration" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 160 160"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <!-- Тень -->
+                            <ellipse
+                                cx="80"
+                                cy="145"
+                                rx="48"
+                                ry="8"
+                                fill="#E0E7FF"
+                                opacity="0.6"
+                            />
+
+                            <!-- Чек -->
+                            <path
+                                d="M48 28C48 24.686 50.686 22 54 22H106C109.314 22 112 24.686 112 28V118C112 121.314 109.314 124 106 124H54C50.686 124 48 121.314 48 118V28Z"
+                                fill="#EEF2FF"
+                            />
+
+                            <path
+                                d="M48 28C48 24.686 50.686 22 54 22H106C109.314 22 112 24.686 112 28V118C112 121.314 109.314 124 106 124H54C50.686 124 48 121.314 48 118V28Z"
+                                stroke="#C7D2FE"
+                                stroke-width="1.5"
+                            />
+
+                            <!-- Перфорация -->
+                            <path
+                                d="M48 112H112"
+                                stroke="#C7D2FE"
+                                stroke-width="1.5"
+                                stroke-dasharray="4 3"
+                            />
+
+                            <!-- Значок -->
+                            <circle
+                                cx="68"
+                                cy="42"
+                                r="12"
+                                fill="#A5B4FC"
+                            />
+
+                            <text
+                                x="68"
+                                y="47"
+                                text-anchor="middle"
+                                font-size="14"
+                                font-weight="700"
+                                fill="white"
+                                font-family="system-ui"
+                            >
+                                ₽
+                            </text>
+
+                            <!-- Строки -->
+                            <rect x="62" y="62" width="36" height="4" rx="2" fill="#C7D2FE"/>
+                            <rect x="62" y="72" width="28" height="4" rx="2" fill="#C7D2FE"/>
+                            <rect x="62" y="82" width="32" height="4" rx="2" fill="#C7D2FE"/>
+
+                            <!-- Галочки -->
+                            <circle cx="90" cy="64" r="5" fill="#A5B4FC"/>
+                            <path
+                                d="M87.5 64L89 65.5L92.5 62"
+                                stroke="white"
+                                stroke-width="1.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <circle cx="90" cy="74" r="5" fill="#A5B4FC"/>
+                            <path
+                                d="M87.5 74L89 75.5L92.5 72"
+                                stroke="white"
+                                stroke-width="1.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <circle cx="90" cy="84" r="5" fill="#A5B4FC"/>
+                            <path
+                                d="M87.5 84L89 85.5L92.5 82"
+                                stroke="white"
+                                stroke-width="1.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <!-- Вопросительные знаки -->
+                            <g opacity="0.9">
+                                <text
+                                    x="42"
+                                    y="38"
+                                    font-size="22"
+                                    font-weight="600"
+                                    fill="#818CF8"
+                                    font-family="system-ui"
+                                >
+                                    ?
+                                </text>
+
+                                <text
+                                    x="72"
+                                    y="18"
+                                    font-size="26"
+                                    font-weight="600"
+                                    fill="#6366F1"
+                                    font-family="system-ui"
+                                >
+                                    ?
+                                </text>
+
+                                <text
+                                    x="108"
+                                    y="36"
+                                    font-size="20"
+                                    font-weight="600"
+                                    fill="#A5B4FC"
+                                    font-family="system-ui"
+                                >
+                                    ?
+                                </text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <h2 class="empty-title">
+                        Здесь будет история ваших чеков
+                    </h2>
+
+                    <p class="empty-subtitle">
+                        Вы не добавили еще ни одного чека
+                    </p>
+
+                    <a
+                        href="{% url 'receipts:register_receipt' %}"
+                        class="btn-primary"
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                        >
+                            <rect
+                                x="3"
+                                y="2"
+                                width="10"
+                                height="12"
+                                rx="1.5"
+                                stroke="currentColor"
+                                stroke-width="1.3"
+                            />
+
+                            <path
+                                d="M6 5H10M6 8H10M6 11H8"
+                                stroke="currentColor"
+                                stroke-width="1.3"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+
+                        Зарегистрировать чек
+                    </a>
+
+                </div>
+
+            {% endfor %}
 
 
         {% if receipts.has_other_pages %}
@@ -200,47 +366,47 @@
 
     <!-- Нижняя часть -->
 
-    <div class="footer-actions">
+    {% if receipts %}
+        <div class="footer-actions">
 
-        <div class="hint">
-            <span class="hint-icon">ⓘ</span>
+            <div class="hint">
+                <span class="hint-icon">ⓘ</span>
+                Иногда проверка вашего чека может занять до 5 рабочих дней
+            </div>
 
-            Иногда проверка вашего чека может занять до 5 рабочих дней
-        </div>
-
-
-        <a
-            href="{% url 'receipts:register_receipt' %}"
-            class="btn-primary"
-        >
-            <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
+            <a
+                href="{% url 'receipts:register_receipt' %}"
+                class="btn-primary"
             >
-                <rect
-                    x="3"
-                    y="2"
-                    width="10"
-                    height="12"
-                    rx="1.5"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                />
+                <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                >
+                    <rect
+                        x="3"
+                        y="2"
+                        width="10"
+                        height="12"
+                        rx="1.5"
+                        stroke="currentColor"
+                        stroke-width="1.3"
+                    />
 
-                <path
-                    d="M6 5H10M6 8H10M6 11H8"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                    stroke-linecap="round"
-                />
-            </svg>
+                    <path
+                        d="M6 5H10M6 8H10M6 11H8"
+                        stroke="currentColor"
+                        stroke-width="1.3"
+                        stroke-linecap="round"
+                    />
+                </svg>
 
-            Зарегистрировать чек
-        </a>
+                Зарегистрировать чек
+            </a>
 
-    </div>
+        </div>
+    {% endif %}
 
 </main>
 
