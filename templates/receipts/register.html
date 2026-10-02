@@ -8,4 +8,44 @@
 
 <h1>Регистрация чека</h1>
 
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div>
+        {{ form.fn.label_tag }}
+        {{ form.fn }}
+        {{ form.fn.errors }}
+    </div>
+
+    <div>
+        {{ form.fd.label_tag }}
+        {{ form.fd }}
+        {{ form.fd.errors }}
+    </div>
+
+    <div>
+        {{ form.fp.label_tag }}
+        {{ form.fp }}
+        {{ form.fp.errors }}
+    </div>
+
+    <div>
+        {{ form.purchase_datetime.label_tag }}
+        {{ form.purchase_datetime }}
+        {{ form.purchase_datetime.errors }}
+    </div>
+
+    <div>
+        {{ form.amount.label_tag }}
+        {{ form.amount }}
+        {{ form.amount.errors }}
+    </div>
+
+    <button type="submit">
+        Зарегистрировать чек
+    </button>
+</form>
+
 {% endblock %}

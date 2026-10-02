@@ -1,11 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Личный кабинет
-{% endblock %}
-
 {% block content %}
 
 <h1>Личный кабинет</h1>
 
+<a href="{% url 'receipts:register_receipt' %}">
+    Зарегистрировать чек
+</a>
+
+{% if page_obj.object_list %}
+
+    {% for receipt in page_obj %}
+        <div>
+            <p>Дата покупки: {{ receipt.purchase_datetime }}</p>
+            <p>Сумма: {{ receipt.amount }} ₽</p>
+            <p>Статус: {{ receipt.get_status_display }}</p>
+
+            {% if receipt.status == receipt.Status.REJECTED %}
+                <p>Причина отказа: {{ receipt.rejection_reason }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+{% else %}
+
+    <p>У вас пока нет зарегистрированных чеков.</p>
+
+{% endif %}
+
 {% endblock %}
+
+{% if page_obj.has_other_pages %}
+    <nav>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">
+                Назад
+            </a>
+        {% endif %}
+
+        <span>
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">
+                Далее
+            </a>
+        {% endif %}
+    </nav>
+{% endif %}
